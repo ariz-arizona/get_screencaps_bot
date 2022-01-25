@@ -16,9 +16,11 @@ const getRandomFilm = async (chatId, category) => {
     const techMsg = await bot.sendMessage(chatId, `Выбрана категория ${category}`);
     const techMsgId = techMsg.message_id;
 
+    console.log(`Для чат айди ${chatId} выбрана категория ${category}`);
+
     try {
         const queryAttrs = {
-            "cat": category,
+            "categories": category,
             "_fields": "id",
             "per_page": 1
         }
@@ -28,10 +30,12 @@ const getRandomFilm = async (chatId, category) => {
         queryAttrs.offset = getRandomInt(0, allPostsCount - 1);
         queryAttrs._fields = "id,title,excerpt"
         const post = await loadPage(`${mainUrl}/posts${makeQueryString(queryAttrs)}`);
+        console.log(`Для чат айди ${chatId} выбрана случайная страницв ${queryAttrs.offset}`);
 
         const { id, title, excerpt } = post[0];
 
         bot.editMessageText(`Выбрал случайную запись ${id}`, { chat_id: chatId, message_id: techMsgId });
+        console.log(`Для чат айди ${chatId} выбрана случайная запись ${id}`);
 
         //штож, теперь выбираем картинку стандартным методом
         let content = await loadPage(`${mainUrlGeneral}/?p=${id}`, 'text');
@@ -42,6 +46,7 @@ const getRandomFilm = async (chatId, category) => {
         const randomPage = getRandomInt(1, pagesCount);
 
         bot.editMessageText(`Выбрал случайную страницу ${randomPage}`, { chat_id: chatId, message_id: techMsgId });
+        console.log(`Для чат айди ${chatId} выбрана случайная страница в посте ${randomPage}`);
 
         content = await loadPage(`${link}/page/${randomPage}`, 'text');
         dom = HTMLParser.parse(content);
