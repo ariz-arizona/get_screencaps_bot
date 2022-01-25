@@ -17,7 +17,7 @@ const getRandomFilm = async (chatId, category) => {
     const techMsgId = techMsg.message_id;
 
     console.log(`Для чат айди ${chatId} выбрана категория ${category}`);
-
+    
     try {
         const queryAttrs = {
             "categories": category,
@@ -51,7 +51,7 @@ const getRandomFilm = async (chatId, category) => {
         content = await loadPage(`${link}/page/${randomPage}`, 'text');
         dom = HTMLParser.parse(content);
 
-        const images = dom.querySelectorAll("a[href*='caps.pictures']");
+        const images = dom.querySelectorAll(".article__content div[align='center'] > a[href]");
         const randomImage = getRandomInt(0, images.length - 1);
         const imageHref = images[randomImage].getAttribute('href');
 
